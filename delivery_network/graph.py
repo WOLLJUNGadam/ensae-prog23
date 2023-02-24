@@ -74,7 +74,25 @@ class Graph:
     
 
     def connected_components(self):
-        raise NotImplementedError
+        '''retourne une liste de listes (une par composante connectée)''' #FICHIER À CHANGER, LES COMPOSANTES CONNECTÉES SONT LES POINTS QUI SONT CONNECTÉS AU SENS OÙ IL EXISTE UN CHEMIN POUR REJOINDRE TOUS CES POINTS
+        output = []
+        for i in range(1,self.nb_nodes):
+            for j in range(1,self.nb_nodes):   # Ça pourrait être intéressant de faire j in range(i,self.nb_nodes) afin de ne pas avoir les liste en double ([i,j], [j,i])
+                for k in range(len(self.graph[i])):
+                    if j == self.graph[i][k][0]:
+                        output.append([i,j])
+        return output
+        '''python delivery_network/main.py
+            The graph has 7 nodes and 5 edges.
+            1-->[(2, 1, 1)]
+            2-->[(1, 1, 1), (3, 1, 1)]
+            3-->[(2, 1, 1)]
+            4-->[(5, 1, 1)]
+            5-->[(4, 1, 1), (7, 1, 1)]
+            6-->[(7, 1, 1)]
+            7-->[(6, 1, 1), (5, 1, 1)]
+            [1, 2], [2, 3], [4, 5]]
+            (base) adamwolljung@MacBook-Air-de-Adam ensae-prog23 % '''
 
 
     def connected_components_set(self):
