@@ -70,18 +70,70 @@ class Graph:
     
 
     def get_path_with_power(self, src, dest, power):
-        raise NotImplementedError
+        nodes_visited = {nodes: False for nodes in self.nodes}
+    
+        def search_path(nodes, path):
+            if nodes == dest:
+                 return path
+            for i in self.graph[nodes]:     # i étant les voisins cherchés
+                i, power_min, dest = i
+                if not nodes_visited[i] and power_min  <= power :
+                    nodes_visited[i] = True 
+                    result =  search_path(i, path + [i])
+                    if result is not None:
+                        return result
+            return None
+        
+        return search_path(src, [src ])
     
 
     def connected_components(self):
         '''retourne une liste de listes (une par composante connectée)''' #FICHIER À CHANGER, LES COMPOSANTES CONNECTÉES SONT LES POINTS QUI SONT CONNECTÉS AU SENS OÙ IL EXISTE UN CHEMIN POUR REJOINDRE TOUS CES POINTS
-        output = []
+        list_components = []
+        nodes_visited = {nodes: False for nodes in self.nodes}
+    
+        def dfs(nodes):
+            component = [nodes]
+            for i in self.graph[nodes]:
+                i = i[0]
+                if not nodes_visited[i]:      # i étant les voisins cherchés  
+                      nodes_visited[i] = True
+                      component = component + dfs(i)
+            return component
+        
+        for i in self.nodes:
+            if not nodes_visited[i]:
+                list_components.append(dfs(i))
+
+        return list_components
+        '''
+        test = False
+        output = [[]]
+        l = int(0)
+        tailleoutput = len(output)
         for i in range(1,self.nb_nodes):
-            for j in range(1,self.nb_nodes):   # Ça pourrait être intéressant de faire j in range(i,self.nb_nodes) afin de ne pas avoir les liste en double ([i,j], [j,i])
-                for k in range(len(self.graph[i])):
-                    if j == self.graph[i][k][0]:
-                        output.append([i,j])
-        return output
+            tailleoutput = len(output)
+            for j in range(1,tailleoutput):
+                if i in output[j]:
+                    test = True
+                    l = j
+                print(test)
+                if test : 
+                    output(l).append([i])
+                else : 
+                    output.append([i])
+                print(output)
+        '''
+        '''
+        output = [[1]]
+        for i in range(1,self.nb_nodes):
+            t = len(output)
+            for k in range(t):
+                if i in output[k]:
+                    for j in range(len(self.graph[i]) - 1):
+                        if j not in output[k]:
+                            output[k].append(j)
+        return output'''
         '''python delivery_network/main.py
             The graph has 7 nodes and 5 edges.
             1-->[(2, 1, 1)]
