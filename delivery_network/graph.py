@@ -75,17 +75,16 @@ class Graph:
         def search_path(nodes, path):
             if nodes == dest:
                  return path
-            for i in self.graph[nodes]:     # i étant les voisins cherchés
-                i, power_min, dest = i
-                if not nodes_visited[i] and power_min  <= power :
-                    nodes_visited[i] = True 
-                    result =  search_path(i, path + [i])
+            for neighbour in self.graph[nodes]:     # neighbour sont les voisins cherchés
+                neighbour, power_min, dist = neighbour
+                if not nodes_visited[neighbour] and power_min  <= power :
+                    nodes_visited[neighbour] = True 
+                    result =  search_path(neighbour, path + [neighbour])
                     if result is not None:
                         return result
             return None
-        
-        return search_path(src, [src ])
-    
+
+        return search_path(src, [src])
 
     def connected_components(self):
         '''retourne une liste de listes (une par composante connectée)''' #FICHIER À CHANGER, LES COMPOSANTES CONNECTÉES SONT LES POINTS QUI SONT CONNECTÉS AU SENS OÙ IL EXISTE UN CHEMIN POUR REJOINDRE TOUS CES POINTS
@@ -106,47 +105,7 @@ class Graph:
                 list_components.append(dfs(i))
 
         return list_components
-        '''
-        test = False
-        output = [[]]
-        l = int(0)
-        tailleoutput = len(output)
-        for i in range(1,self.nb_nodes):
-            tailleoutput = len(output)
-            for j in range(1,tailleoutput):
-                if i in output[j]:
-                    test = True
-                    l = j
-                print(test)
-                if test : 
-                    output(l).append([i])
-                else : 
-                    output.append([i])
-                print(output)
-        '''
-        '''
-        output = [[1]]
-        for i in range(1,self.nb_nodes):
-            t = len(output)
-            for k in range(t):
-                if i in output[k]:
-                    for j in range(len(self.graph[i]) - 1):
-                        if j not in output[k]:
-                            output[k].append(j)
-        return output'''
-        '''python delivery_network/main.py
-            The graph has 7 nodes and 5 edges.
-            1-->[(2, 1, 1)]
-            2-->[(1, 1, 1), (3, 1, 1)]
-            3-->[(2, 1, 1)]
-            4-->[(5, 1, 1)]
-            5-->[(4, 1, 1), (7, 1, 1)]
-            6-->[(7, 1, 1)]
-            7-->[(6, 1, 1), (5, 1, 1)]
-            [1, 2], [2, 3], [4, 5]]
-            (base) adamwolljung@MacBook-Air-de-Adam ensae-prog23 % '''
-
-
+    
     def connected_components_set(self):
         """
         The result should be a set of frozensets (one per component), 
@@ -157,8 +116,36 @@ class Graph:
     def min_power(self, src, dest):
         """
         Should return path, min_power. 
-        """
-        raise NotImplementedError
+        """      
+        list_power = []
+        for i in self.nodes:
+            for k in self.graph[i]:
+                list_power.append(k[1])
+        list_power = sorted(list(set(list_power)))
+        power = list_power[int((len(list_power)/2))]
+        medium = int((len(list_power)/2))
+        min = 0
+        max = len(list_power)
+        result = self.get_path_with_power(src, dest, list_power[min])
+        if result is not None:
+            return result, list_power[min]
+        result = self.get_path_with_power(src, dest, power)
+        while max-min > 1:
+            if result is not None:
+                max = medium
+                medium = int((medium+min)/2)
+                min = min
+                power = list_power[medium]
+                result = self.get_path_with_power(src, dest, power)
+            elif result is None:
+                min = medium
+                medium = int((medium+max)/2)
+                max = max
+                power = list_power[medium]
+                result = self.get_path_with_power(src, dest, power)
+        return self.get_path_with_power(src, dest, list_power[max]), list_power[max]
+
+
 
 
 def graph_from_file(filename):
