@@ -77,6 +77,7 @@ class Graph:
                  return path
             for neighbour in self.graph[nodes]:     # neighbour sont les voisins cherchés
                 neighbour, power_min, dist = neighbour
+                nodes_visited[src] = True
                 if not nodes_visited[neighbour] and power_min  <= power :
                     nodes_visited[neighbour] = True 
                     result =  search_path(neighbour, path + [neighbour])
@@ -144,8 +145,6 @@ class Graph:
                 power = list_power[medium]
                 result = self.get_path_with_power(src, dest, power)
         return self.get_path_with_power(src, dest, list_power[max]), list_power[max]
-
-
 
 
 def graph_from_file(filename):
