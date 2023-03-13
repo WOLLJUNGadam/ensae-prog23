@@ -21,7 +21,6 @@ class Test_Reachability(unittest.TestCase):
 
 
 
-
 class Test_MinimalPower(unittest.TestCase):  #À COMPLÉTER ENCORE.....
     def test_network2(self):
         g = graph_from_file("input/network.05.in")
