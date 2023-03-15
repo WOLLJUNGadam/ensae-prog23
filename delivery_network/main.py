@@ -1,11 +1,13 @@
-from graph import Graph, graph_from_file
+from graph import Graph, graph_from_file, kruskal, kruskal_min_power
 
 
 data_path = "input/"
-file_name = "network.05.in"
+file_name = "network.1.in"
 
 g = graph_from_file(data_path + file_name)
-print(g)
-print (g.graph)
 
-print(g.get_path_with_power(2, 4, 7))
+print(g)
+
+print(kruskal(g))
+
+print(kruskal_min_power(g,1,12))

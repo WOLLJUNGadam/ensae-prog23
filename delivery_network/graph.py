@@ -55,24 +55,29 @@ class Graph:
         dist: numeric (int or float), optional
             Distance between node1 and node2 on the edge. Default is 1.
         """
+        # If the node1 does not exist in the graph, add it to the graph with an empty adjacency list
         if node1 not in self.graph:
             self.graph[node1] = []
             self.nb_nodes += 1
             self.nodes.append(node1)
+        # If the node2 does not exist in the graph, add it to the graph with an empty adjacency list
         if node2 not in self.graph:
             self.graph[node2] = []
             self.nb_nodes += 1
             self.nodes.append(node2)
 
+        # Add the edge to the adjacency list of both nodes
         self.graph[node1].append((node2, power_min, dist))
         self.graph[node2].append((node1, power_min, dist))
         self.nb_edges += 1
     
 
     def get_path_with_power(self, src, dest, power):
+        # Dictionary to store if a node has been visited or not
         nodes_visited = {nodes: False for nodes in self.nodes}
     
         def search_path(nodes, path):
+            # If the destination node is reached, return the path
             if nodes == dest:
                  return path
             for neighbour in self.graph[nodes]:     # neighbour sont les voisins cherchés
@@ -147,6 +152,7 @@ class Graph:
         return self.get_path_with_power(src, dest, list_power[max]), list_power[max]
 
 
+
 def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.
@@ -181,3 +187,97 @@ def graph_from_file(filename):
             else:
                 raise Exception("Format incorrect")
     return g
+
+
+class UnionFind:
+    """
+    A class representing a Union-Find data structure.
+    It is used to implement Kruskal's algorithm to find the minimum spanning tree of a graph.
+"""
+    def __init__(self, n):
+        # Initialize the parent list for each node
+        self.parent = list(range(n))
+        # Initialize the rank of each node to 0
+        self.rank = [0] * n
+
+    def find(self, x):
+        # If the node is not its own parent, recursively find its parent
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        # Set the node's parent to its root node
+        return self.parent[x]
+
+    def union(self, x, y):
+        # Find the root nodes of the two input nodes
+        xroot, yroot = self.find(x), self.find(y)
+        # If the nodes are already in the same set, return
+        if xroot == yroot:
+            return
+        # If the rank of the root node of x is less than the rank of the root node of y,
+        # make the root node of y the parent of the root node of x
+        if self.rank[xroot] < self.rank[yroot]:
+            xroot, yroot = yroot, xroot
+        self.parent[yroot] = xroot
+        # If the rank of the root node of x is equal to the rank of the root node of y,
+        # increment the rank of the root node of x by 1
+        if self.rank[xroot] == self.rank[yroot]:
+            self.rank[xroot] += 1
+
+
+def kruskal(g):
+    # Sort edges by weight
+    sort_edges = []
+    edges = []
+
+    # Extract all edges from graph
+    for i in g.graph:
+        for n, p, d in g.graph[i]:
+            edges.append((p, i, n))
+    # Sort edges by weight
+    sort_edges = sorted(edges, key=lambda a: a[0])
+
+    # Initialize UnionFind
+    uf = UnionFind(g.nb_nodes + max(g.nodes))
+
+    # Create minimum spanning tree
+    mst = Graph()
+    for weight, node1, node2 in sort_edges:
+        # Check if adding edge creates cycle
+        if uf.find(node1) != uf.find(node2):
+            # Add edge to minimum spanning tree
+            mst.add_edge(node1, node2, weight)
+            # Merge sets
+            uf.union(node1, node2)
+
+    return mst
+
+def kruskal_min_power(self, src, dest):
+        # Initialize variables to track minimum power path and value
+        min_path = []
+        min_power = float('inf')
+        
+        # Dictionary to store if a node has been visited or not
+        nodes_visited = {nodes: False for nodes in self.nodes}
+    
+        def search_path(nodes, path, power):
+            nonlocal min_path, min_power
+            
+            # If the destination node is reached, check if this path has lower min_power
+            if nodes == dest:
+                if power < min_power:
+                    min_path = path
+                    min_power = power
+                return
+            
+            # Explore all neighbors of the current node
+            for neighbour, power_min, dist in self.graph[nodes]:
+                if not nodes_visited[neighbour] and power_min <= power:
+                    nodes_visited[neighbour] = True 
+                    search_path(neighbour, path + [neighbour], min(power, power_min))
+                    nodes_visited[neighbour] = False
+            
+        # Start the search from the source node
+        nodes_visited[src] = True
+        search_path(src, [src], float('inf'))
+        
+        return min_path, min_power
