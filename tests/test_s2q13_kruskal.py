@@ -40,10 +40,10 @@ class Test_MinimalPower(unittest.TestCase):
     def test_network04(self):
         g = graph_from_file("input/network.04.in")
         a = kruskal(g)
-        self.assertEqual(set(a.graph[1]), {(2, 4, 1)})
-        self.assertEqual(set(a.graph[2]), {(3, 4, 1), (1, 4, 1)})
-        self.assertEqual(set(a.graph[3]), {(2, 4, 1), (4, 4, 1)})
-        self.assertEqual(set(a.graph[4]), {(3, 4, 1)})
+        self.assertEqual(set(a.graph[1]), {(2, 4, 89)})
+        self.assertEqual(set(a.graph[2]), {(1, 4, 89), (3, 4, 3)})
+        self.assertEqual(set(a.graph[3]), {(2, 4, 3), (4, 4, 2)})
+        self.assertEqual(set(a.graph[4]), {(3, 4, 2)})
 
 if __name__ == '__main__':
     unittest.main()
