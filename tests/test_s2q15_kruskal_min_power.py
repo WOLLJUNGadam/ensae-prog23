@@ -4,20 +4,25 @@ import sys
 sys.path.append("delivery_network")
 sys.setrecursionlimit(500000)
 
-from graph import Graph, graph_from_file, kruskal_min_power
+from graph import Graph, graph_from_file
 from time import perf_counter
 from math import floor
 
 X = range(1,11)
 data_path = "input/"
 tps_total = []
-nbr_tests = 10
+nbr_tests = 25
+
+
+
 
 for i in X:
     print(i)
     tps = 0
     file_name = f"network.{i}.in"
     g = graph_from_file(data_path + file_name)
+    g_new = g.kruskal()
+    h=g_new.oriented_tree()
     routes = f"routes.{i}.in"
     with open(data_path + routes, "r") as file:
         L = file.readlines()#On transforme le tableau en une liste de chaîne de caractères, avec une chaîne = une ligne 
@@ -28,7 +33,7 @@ for i in X:
         for k in range(1,nbr_tests):
             paths = lignes[k]
             tps_debut = perf_counter()
-            kruskal_min_power(g,int(paths[0]), int(paths[1]))
+            g.kruskal_min_power(h, int(paths[0]), int(paths[1]))
             tps_fin = perf_counter()
             tps += tps_fin - tps_debut
         tps = floor(tps * n) / floor(nbr_tests)
