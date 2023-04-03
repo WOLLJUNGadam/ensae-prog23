@@ -1,4 +1,5 @@
-from graph import Graph, graph_from_file, trucks_from_file, sorted_trucks
+from graph import Graph, graph_from_file
+from optimisation import trucks_from_file, sorted_trucks
 
 
 data_path = "input/"
