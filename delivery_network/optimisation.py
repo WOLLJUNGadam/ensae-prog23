@@ -77,5 +77,35 @@ def truck_for_routes(network, route_file, trucks_file):
     return L
 
 
+def max_profit(network, route_file, trucks_file):
+    truck_routes = truck_for_routes(network, route_file, trucks_file)
+    profit = 0
+    x = 0
+    j = 0
+    profit_route = 0
+    cost_truck = 0
+    power_and_profit=[]
+    truck_routes_rapport = []
+    for i in range(len(truck_routes)) :
+        profit_route = int(truck_routes[i][0][1])
+        cost_truck = int(truck_routes[i][1][1])
+        rapport = profit_route/cost_truck
+        truck_routes_rapport.append(truck_routes[i] + (rapport,))
+    truck_routes_rapport.sort(key=lambda truck_routes_rapport : truck_routes_rapport[2], reverse= True)
+    while x<25*10**9 and j < len(truck_routes_rapport):
+        profit += truck_routes_rapport[j][0][1]
+        x += truck_routes_rapport[j][1][1]
+        power_and_profit.append(truck_routes_rapport[j][0][0] + (truck_routes_rapport[j][1][0],))
+        cost_truck = truck_routes_rapport[j][1][0]
+        profit_route = truck_routes_rapport[j][0][1]
+        j += 1
+    if x > 25*10**9:
+        power_and_profit.pop(-1)
+        x = x - cost_truck
+        profit = profit - profit_route
+    power_and_profit = [profit] + power_and_profit
+    return power_and_profit, profit, x
+
+
 
 
