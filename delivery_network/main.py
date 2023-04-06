@@ -11,8 +11,6 @@ g = graph_from_file(data_path + file_name)
 
 file_name = "trucks.1.in"
 
-print(len(trucks_from_file(data_path + file_name)))
-print(len(sorted_trucks(trucks_from_file(data_path + file_name))))
 
 """print(truck_for_routes(data_path + "network.2.in", data_path + "routes.2.in", data_path + "trucks.2.in"))
 
@@ -30,8 +28,8 @@ for i in range(100):
 """
 #print(sorted_trucks(trucks_from_file(data_path + "trucks.2.in")))
 
-a,b,c = max_profit(data_path + "network.3.in", data_path + "routes.3.in", data_path + "trucks.2.in")
-print(a)
+a,b,c = max_profit(data_path + "network.7.in", data_path + "routes.7.in", data_path + "trucks.2.in")
+
 print(b)
 print(c)
 
